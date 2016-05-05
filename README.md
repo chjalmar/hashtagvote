@@ -12,3 +12,25 @@ Agregado htv2.js, que utiliza la librería 'twitter' en lugar de 'twit'. Cambios 
 - La librería 'twitter' recibe la credencial de 'access_token' como 'access_token_key'.
 - Usando la librería 'twitter', la propiedad 'track' del objeto que se pasa como segundo parámetro al método 'stream' sólo recibe un string con palabras, etiquetas o nombres de usuario separados por comas (la coma es como un operador lógico "OR": ver documentación de la API de Twitter en https://dev.twitter.com/streaming/overview/request-parameters#track ); mientras que la librería 'twit' puede recibir un arreglo, y convertirá los elementos del arreglo en una lista de elementos separados por comas.
 - En la librería 'twitter', el stream recibido pasará como parámetro a la función callback que va como tercer parámetro del método 'stream'. Dentro del callback, se puede llamar el método 'on' para manejo de errores, entre otras opciones.
+
+#Uso
+
+- Instalar Node y npm
+- Instalar módulo fs
+- Instalar módulo 'twit' para htv.js, o 'twitter' para htv2.js
+- Establecer credenciales de Twitter:
+  He creado un módulo con una única función que devuelve, para htv2 (que usa la librería 'twitter), el objeto:
+  { 
+    consumer_key:'...',
+    consumer_secret:'...',
+    access_token_key:'...',
+    access_token_secret:'...'  
+  }
+  Y para htv, que usa la librería 'twit', devuelve el objeto:
+  { 
+    consumer_key:'...',
+    consumer_secret:'...',
+    access_token:'...',
+    access_token_secret:'...'  
+  }
+  La función recibe como único parámetro un string con el nombre de la librería utilizada, y devuelve el objeto.
