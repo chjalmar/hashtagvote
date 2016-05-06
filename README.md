@@ -13,6 +13,10 @@ Agregado htv2.js, que utiliza la librería 'twitter' en lugar de 'twit'. Cambios 
 - Usando la librería 'twitter', la propiedad 'track' del objeto que se pasa como segundo parámetro al método 'stream' sólo recibe un string con palabras, etiquetas o nombres de usuario separados por comas (la coma es como un operador lógico "OR": ver documentación de la API de Twitter en https://dev.twitter.com/streaming/overview/request-parameters#track ); mientras que la librería 'twit' puede recibir un arreglo, y convertirá los elementos del arreglo en una lista de elementos separados por comas.
 - En la librería 'twitter', el stream recibido pasará como parámetro a la función callback que va como tercer parámetro del método 'stream'. Dentro del callback, se puede llamar el método 'on' para manejo de errores, entre otras opciones.
 
+06/05/2016
+
+Agregada escritura a MongoDB de los Tweets que cumplen con los criterios, en htv2.js
+
 #Uso
 
 - Instalar Node y npm

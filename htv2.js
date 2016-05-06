@@ -1,5 +1,11 @@
 var Twit = require('twitter');
 var fs = require('fs');
+
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/hashtagvoto';
+
 var credentials = require("./creds.js");
 //agregue las credenciales de su cuenta Twitter
 
@@ -28,7 +34,7 @@ T.stream('statuses/filter', { track: '#FelizJueves,#siguemeytesigo' }, function(
     
     //arreglo "opciones", de opciones a votar en el concurso
     //OJO: Escribir en el arreglo el hashtag sin acentos y sin el numeral (#); las mayúsculas no importan
-    var opciones = ["Geografia","MichelOnfray"];
+    var opciones = ["siguemeytesigo","MichelOnfray"];
     var hashtags = tweet.entities.hashtags;
     var contenido;
     
@@ -50,17 +56,31 @@ T.stream('statuses/filter', { track: '#FelizJueves,#siguemeytesigo' }, function(
           //seguir chequeando sólo si no ha votado por alguna de las opciones en el mismo tweet
           if (opcion.toLowerCase() === opciones[i].toLowerCase()) {
              contenido = {
-                           totalcount: 123,
-                           latest: {  created_at: tweet.created_at, 
-    	                               screen_name: tweet.user.screen_name, 
-    	                                      text: tweet.text,
-    	                                      voto: opciones[i]
-    	                             }
+                          
+                                    id: tweet.id,
+                            created_at: tweet.created_at, 
+    	                     screen_name: tweet.user.screen_name, 
+    	                            text: tweet.text,
+    	                            voto: opciones[i]
+    	                             
                          };     	
              //Escribir al archivo
              printfile(contenido); 
           	 console.log("Ultimo tweet agregado al archivo, por @"+ tweet.user.screen_name +".");
+          	 
+          	 //Escribir a MongoDB
+          	 
+          	 MongoClient.connect(url, function(err, db) {
+             assert.equal(null, err);
+             insertInMongoDB(contenido, db, function() {
+                 db.close();
+             });
+});
+          	 
           	 i = opciones.length - 1;
+          	 
+          	 
+          	 
           	 contvotos++;
           }
         }
@@ -83,3 +103,13 @@ function printfile(contenido){
     });
     
 }
+
+function insertInMongoDB (latest, db, callback) {
+   db.collection('hashtagvoto').insertOne( {
+      "tweets" : latest
+   }, function(err, result) {
+    assert.equal(err, null);
+    console.log("Documento insertado en la colección 'Tweets'.");
+    callback();
+  });
+};
